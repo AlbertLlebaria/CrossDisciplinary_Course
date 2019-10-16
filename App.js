@@ -1,21 +1,47 @@
 import React from 'react';
-import {View, Text, Button} from 'react-native';
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
-import HomeScreen from "./src/components/Home";
-import Login from "./src/components/Login";
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import LoginScreen from "./src/components/LoginScreen";
+import HomeScreen from "./src/components/HomeScreen";
+import ScannerForm from "./src/components/ScannerForm/ScannerForm";
+import FoodList from "./src/components/FoodList/FoodList";
+import {Provider} from 'react-redux';
+import configureStore from './src/configureStore'
 
+let store = configureStore();
 
-const AppNavigator = createStackNavigator({
-    Home: {
-        screen: HomeScreen,
-    },
-    Login:{
-        screen: Login,
+export const theme = {
+    ...DefaultTheme,
+    roundness: 2,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: '#3498db',
+        accent: '#f1c40f',
     }
+};
 
-}, {
-    initialRouteName: 'Home',
+export default class App extends React.Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <PaperProvider theme={theme}>
+                    <AppContainer/>
+                </PaperProvider>
+            </Provider>
+        );
+    }
+}
+
+
+const AuthenticationNavigator = createSwitchNavigator({
+    SignIn: LoginScreen,
 });
 
-export default createAppContainer(AppNavigator);
+const AppNavigator = createSwitchNavigator({
+    Auth: AuthenticationNavigator,
+    Home: HomeScreen,
+    Form: ScannerForm,
+    List: FoodList,
+});
+
+const AppContainer = createAppContainer(AppNavigator);
