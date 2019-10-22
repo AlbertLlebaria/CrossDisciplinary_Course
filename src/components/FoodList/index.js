@@ -43,7 +43,7 @@ class AccordionList extends React.Component {
 }
 
 
-export default function FoodList() {
+export default function Index() {
     return (
         <AccordionList></AccordionList>
     )

@@ -1,9 +1,11 @@
 import React from "react";
 import {TextInput, Button, withTheme} from 'react-native-paper';
-import {View} from "react-native";
-import styles from './style'
+import {View, StyleSheet} from "react-native";
+import style from './style'
 
 function LoginScreen(props) {
+    const styles = StyleSheet.create(style)
+
     const [formFields, changeValueFromForm] = React.useState({username: '', password: ''});
     const {colors} = props.theme;
 
@@ -27,7 +29,8 @@ function LoginScreen(props) {
             />
             <Button
                 style={{marginTop: 20}}
-                onClick={() => handleLogin()}>
+                raised
+                onPress={() => handleLogin()}>
                 Sign in
             </Button>
         </View>

@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Text} from "react-native";
+import {View,} from "react-native";
 
 import {StyleSheet} from "react-native";
 import {Button, Snackbar, TextInput} from "react-native-paper";
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function ScannerForm() {
+export default function Index() {
     const [isVisible, handleSnackBar] = React
         .useState(false);
 
@@ -24,6 +24,11 @@ export default function ScannerForm() {
             provider: '',
             amount: ''
         });
+
+
+    const handleSubmit = () => {
+    };
+
     return (
         <View style={styles.container}>
             <TextInput
@@ -39,7 +44,7 @@ export default function ScannerForm() {
                 onChangeText={text => handleFormInputChange({...formInputs, expiracyDate: text})}
             />
             <TextInput
-                label='recievedDate'
+                label='Received date'
                 style={{backgroundColor: 'none'}}
                 value={formInputs.recievedDate}
                 onChangeText={text => handleFormInputChange({...formInputs, recievedDate: text})}
@@ -69,7 +74,7 @@ export default function ScannerForm() {
             >
                 Food has been added successfully!
             </Snackbar>
-            <Button raised style={{marginTop: '20px'}} onPress={() => handleSnackBar(true)}>
+            <Button raised style={{marginTop: 20}} onPress={() => handleSnackBar(true)}>
                 Press me
             </Button>
         </View>

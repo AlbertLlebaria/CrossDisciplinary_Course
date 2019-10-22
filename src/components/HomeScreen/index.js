@@ -1,7 +1,6 @@
 import React from "react";
 import {View} from "react-native";
-import {IconButton, Colors} from 'react-native-paper';
-import Text from "react-native-web/dist/exports/Text";
+import {IconButton, Text} from 'react-native-paper';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -28,12 +27,11 @@ export default class HomeScreen extends React.Component {
                         alignItems: 'center',
                     }}>
                         <IconButton
-                            icon="form"
+                            icon="speaker"
                             size={50}
                             style={{color: '#AAC0AA'}}
                             onPress={() => this.handleClickedMenuButton('Form')}
                         />
-                        <Text>Food Scanner</Text>
                     </View>
                     <View style={{
                         flex: 1,
@@ -44,7 +42,6 @@ export default class HomeScreen extends React.Component {
                             size={50}
                             onPress={() => console.log('account-circle')}
                         />
-                        <Text>Account</Text>
                     </View>
                 </View>
                 <View style={{
@@ -63,7 +60,6 @@ export default class HomeScreen extends React.Component {
                             size={50}
                             onPress={() => this.handleClickedMenuButton('List')}
                         />
-                        <Text>Store</Text>
                     </View>
                     <View style={{
                         flex: 1,
@@ -72,9 +68,8 @@ export default class HomeScreen extends React.Component {
                         <IconButton
                             icon="android"
                             size={50}
-                            onPress={() => console.log('google-analytics')}
+                            onPress={() => this.handleClickedMenuButton('MapScreen')}
                         />
-                        <Text>Analyze</Text>
                     </View>
                 </View>
             </View>

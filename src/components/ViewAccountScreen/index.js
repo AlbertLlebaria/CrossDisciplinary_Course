@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {Button, TextInput} from "react-native-paper";
 
-export default function ViewAccountScreen() {
+export default function Index() {
     return (
         <View style={styles.container}>
             <TextInput

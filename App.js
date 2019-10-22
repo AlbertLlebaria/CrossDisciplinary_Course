@@ -3,8 +3,9 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import LoginScreen from "./src/components/LoginScreen";
 import HomeScreen from "./src/components/HomeScreen";
-import ScannerForm from "./src/components/ScannerForm/ScannerForm";
-import FoodList from "./src/components/FoodList/FoodList";
+import ScannerForm from "./src/components/ScannerForm";
+import FoodList from "./src/components/FoodList";
+import MapScreen from "./src/components/MapScreen";
 import {Provider} from 'react-redux';
 import configureStore from './src/configureStore'
 
@@ -41,6 +42,7 @@ const AppNavigator = createSwitchNavigator({
     Auth: AuthenticationNavigator,
     Home: HomeScreen,
     Form: ScannerForm,
+    MapScreen: MapScreen,
     List: FoodList,
 });
 
