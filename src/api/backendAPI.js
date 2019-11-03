@@ -6,7 +6,7 @@ const client = new ApolloClient({
 });
 
 
-export function fetchFood(callback) {
+export const fetchFood = (callback)=>{
     client
         .query({
             query: gql`
@@ -19,4 +19,18 @@ export function fetchFood(callback) {
         })
         .then(result => callback(result))
         .catch(error => console.log(error));
+}
+
+const ADD_TODO = gql`
+  mutation AddTodo($type: String!) {
+    addTodo(type: $type) {
+      id
+      type
+    }
+  }
+`;
+
+export const postFood = (food,callback)=>{
+  client
+    .q
 }

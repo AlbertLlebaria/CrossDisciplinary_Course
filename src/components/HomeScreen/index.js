@@ -1,79 +1,108 @@
 import React from "react";
-import {View} from "react-native";
-import {IconButton, Text} from 'react-native-paper';
+import { View, StyleSheet, Image } from "react-native";
+import { IconButton, Text, Button } from 'react-native-paper';
+import style from './style'
 
-export default class HomeScreen extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+export default functionHomeScreen = (props) => {
 
-    handleClickedMenuButton(path) {
+    const styles = StyleSheet.create(style)
+
+    const handleClickedMenuButton = (path) => {
         this.props.navigation.navigate(path)
     }
 
-    render() {
-        return (
+    return (
+        <View style={{
+            flex: 1
+        }}>
+            <View>
+                <Text style={style.home_tittle}>
+                    Vælg nedenfor hvad du gerne vil foretage dig
+            </Text>
+            </View>
             <View style={{
-                flex: 1
+                flex: 1,
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginTop: 50
+
             }}>
                 <View style={{
                     flex: 1,
                     alignItems: 'center',
-                    flexDirection: 'row',
-
                 }}>
-                    <View style={{
-                        flex: 1,
-                        alignItems: 'center',
-                    }}>
-                        <IconButton
-                            icon="speaker"
-                            size={50}
-                            style={{color: '#AAC0AA'}}
-                            onPress={() => this.handleClickedMenuButton('Form')}
-                        />
-                    </View>
-                    <View style={{
-                        flex: 1,
-                        alignItems: 'center',
-                    }}>
-                        <IconButton
-                            icon="account-circle"
-                            size={50}
-                            onPress={() => console.log('account-circle')}
-                        />
-                    </View>
+                    <IconButton
+                        style={styles.icon_button}
+                        icon={({ size, color }) => (
+                            <Image
+                                source={require('../imgs/RegisterFoodIcon.png')}
+                                style={styles.image_button}
+                            />)}
+                        onPress={() => handleClickedMenuButton('Form')}></IconButton>
+                    <Text style={styles.button_label} >Register Mad</Text>
+
                 </View>
                 <View style={{
                     flex: 1,
                     alignItems: 'center',
-                    justifyContent: 'space-around',
-                    flexDirection: 'row'
                 }}>
-
-                    <View style={{
-                        flex: 1,
-                        alignItems: 'center'
-                    }}>
-                        <IconButton
-                            icon="list"
-                            size={50}
-                            onPress={() => this.handleClickedMenuButton('List')}
-                        />
-                    </View>
-                    <View style={{
-                        flex: 1,
-                        alignItems: 'center',
-                    }}>
-                        <IconButton
-                            icon="android"
-                            size={50}
-                            onPress={() => this.handleClickedMenuButton('MapScreen')}
-                        />
-                    </View>
+                    <IconButton
+                        style={styles.icon_button}
+                        icon={({ size, color }) => (<Image
+                            source={require('../imgs/RegisterMadIcon.png')}
+                            style={styles.image_button}
+                        />)}
+                        onPress={() => console.log('account-circle')}
+                    />
+                    <Text style={styles.button_label} >Analyse</Text>
                 </View>
             </View>
-        );
-    }
+            <View style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                flexDirection: 'row'
+            }}>
 
+                <View style={{
+                    flex: 1,
+                    alignItems: 'center'
+                }}>
+                    <IconButton
+                        style={styles.icon_button}
+                        icon={({ size, color }) => (
+                            <Image
+                                source={require('../imgs/AlleRegisteredIcon.png')}
+                                style={styles.image_button}
+                            />)}
+                        onPress={() => handleClickedMenuButton('List')}
+                    />
+                    <Text style={styles.button_label} >Allerede registeret mad</Text>
+                </View>
+                <View style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <IconButton
+                        style={styles.icon_button}
+                        icon={({ size, color }) => (
+                            <Image
+                                style={styles.image_button}
+                                source={require('../imgs/MapIcon.png')}
+                            />)}
+                        onPress={() => handleClickedMenuButton('MapScreen')}
+                    />
+                    <Text style={styles.button_label} >Kort over Butik</Text>
+                </View>
+            </View>
+            <Button
+                style={style.loggin_button}
+                raised
+                color="#ffffff"
+                onPress={() => handleLogin()}>
+                Videre
+            </Button>
+        </View>
+    );
 }
