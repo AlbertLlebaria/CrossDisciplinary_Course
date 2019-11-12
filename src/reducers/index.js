@@ -1,6 +1,8 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import globalReducer from './global.reducer'
+import storeReducer from './store.reducers'
 
 export default combineReducers({
-    data: globalReducer
+    data: globalReducer,
+    API_store: storeReducer
 })

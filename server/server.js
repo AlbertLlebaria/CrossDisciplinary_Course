@@ -39,6 +39,7 @@ const typeDefs = gql`
     recievedDate: ISODate!,
     provider: ID!,
     amount: Int!,
+    barcode: String,
     category: String,
     foodHouse: ID!
   },
@@ -73,7 +74,8 @@ const typeDefs = gql`
   }
   
   input CreateFoodInput{
-    name: String!,
+    name: String,
+    barcode:String,
     expiracyDate: ISODate!,
     recievedDate: ISODate!,
     provider: ID!,
@@ -94,77 +96,7 @@ const typeDefs = gql`
   }
 `;
 
-const foods = [{
-  id: '0',
-  name: 'Banana',
-  expiracyDate: "2019-06-15T00:00:00.000Z",
-  recievedDate: "2019-05-15T00:00:00.000Z",
-  provider: '0',
-  amount: 20,
-  category: 'Fruits',
-  foodHouse: '0'
-},
-{
-  id: '0',
-  name: 'Banana',
-  expiracyDate: "2019-06-17T00:00:00.000Z",
-  recievedDate: "2019-05-16T00:00:00.000Z",
-  provider: '0',
-  amount: 20,
-  category: 'Fruits',
-  foodHouse: '0'
-},
-{
-  id: '1',
-  name: 'Beff',
-  expiracyDate: "2019-06-20T00:00:00.000Z",
-  recievedDate: "2019-05-19T00:00:00.000Z",
-  provider: '0',
-  amount: 10,
-  category: 'Meat and alternatives',
-  foodHouse: '0'
-},
-{
-  id: '1',
-  name: 'Beff',
-  expiracyDate: "2019-06-20T00:00:00.000Z",
-  recievedDate: "2019-05-18T00:00:00.000Z",
-  provider: '0',
-  amount: 10,
-  category: 'Meat and alternatives',
-  foodHouse: '0'
-},
-{
-  id: '1',
-  name: 'Apples',
-  expiracyDate: "2019-06-15T00:00:00.000Z",
-  recievedDate: "2019-05-16T00:00:00.000Z",
-  provider: '0',
-  amount: 25,
-  category: 'Fruits',
-  foodHouse: '0'
-},
-{
-  id: '1',
-  name: 'Apples',
-  expiracyDate: "2019-06-16T00:00:00.000Z",
-  recievedDate: "2019-05-17T00:00:00.000Z",
-  provider: '0',
-  amount: 25,
-  category: 'Fruits',
-  foodHouse: '0'
-},
-{
-  id: '1',
-  name: 'Apples',
-  expiracyDate: "2019-06-15T00:00:00.000Z",
-  recievedDate: "2019-05-18T00:00:00.000Z",
-  provider: '0',
-  amount: 30,
-  category: 'Fruits',
-  foodHouse: '0'
-}];
-
+const foods = [];
 const providers = [
   {
     id: '0',
@@ -198,7 +130,7 @@ const foodHouses = [
       latitude: 55.699136,
       longitude: 12.541956,
     },
-  },{
+  }, {
     id: '2',
     name: 'Jaeggersborg Store',
     city: 'Gentofte',
@@ -215,9 +147,9 @@ const foodHouses = [
     address: 'Jarmers Plads',
     coordinate: {
       latitude: 55.679062,
-      longitude:  12.565472,
+      longitude: 12.565472,
     }
-    }
+  }
 ];
 
 // Resolvers define the technique for fetching the types defined in the
@@ -244,23 +176,31 @@ const resolvers = {
   Mutation: {
     postFood: (parent, args) => {
       let cat = 'Other'
+      let body = { ...args.input }
+
+      if (body.barcode) {
+        body.name = 'banana'
+      }
+
       Object.keys(foodDictionary).some(key => {
-        if (foodDictionary[key].includes(args.input.name.toLowerCase())) {
+        if (foodDictionary[key].includes(body.name.toLowerCase())) {
           cat = key
           return true
         } else {
           return false
         }
-      })
+      });
+
       const link = {
         id: foods.length,
-        name: args.input.name,
-        expiracyDate: args.input.expiracyDate,
-        recievedDate: args.input.recievedDate,
-        provider: args.input.provider,
-        amount: args.input.amount,
+        name: body.name,
+        barcode: body.barcode,
+        expiracyDate: body.expiracyDate,
+        recievedDate: body.recievedDate,
+        provider: body.provider,
+        amount: body.amount,
         category: cat,
-        foodHouse: args.input.foodHouse
+        foodHouse: body.foodHouse
       }
       foods.push(link)
       console.log(foods)

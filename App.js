@@ -6,6 +6,8 @@ import HomeScreen from "./src/components/HomeScreen";
 import ScannerForm from "./src/components/ScannerForm";
 import FoodList from "./src/components/FoodList";
 import MapScreen from "./src/components/MapScreen";
+import CameraScanner from "./src/components/CameraScanner";
+
 import {Provider} from 'react-redux';
 import configureStore from './src/configureStore'
 
@@ -44,6 +46,7 @@ const AppNavigator = createSwitchNavigator({
     Form: ScannerForm,
     MapScreen: MapScreen,
     List: FoodList,
+    Camera: CameraScanner
 });
 
 const AppContainer = createAppContainer(AppNavigator);

@@ -40,6 +40,8 @@ const foodDictionary = {
     ],
     Other: []
 }
+const barcode_dict = {
+}
 
 module.exports = {
     foodDictionary

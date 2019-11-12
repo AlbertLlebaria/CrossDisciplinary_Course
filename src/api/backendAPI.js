@@ -48,8 +48,8 @@ export const fetchProviders = (callback) => {
       }
     `
     })
-    .then(result => callback(false,result.data.providers))
-    .catch(error => callback(true,error));
+    .then(result => callback(false, result.data.providers))
+    .catch(error => callback(true, error));
 }
 
 
@@ -73,15 +73,20 @@ export const fetchFoodHouses = (callback) => {
 }
 /**
  * 
- * @param {*} RegisteredFood 
+ * @param {Object} RegisteredFood 
  * @param {*} callback 
  */
 export const postFood = (RegisteredFood, callback) => {
+  console.log(RegisteredFood)
+  let nameField = RegisteredFood.barcode !== null ?
+    `barcode: "${RegisteredFood.barcode}"` :
+    `name: "${RegisteredFood.name}"`
+
   client
     .mutate({
       mutation: gql`mutation {
         postFood(input:{
-          name: "${RegisteredFood.name}"
+          ${nameField},
           expiracyDate: "${RegisteredFood.expiracyDate}"
           recievedDate: "${RegisteredFood.recievedDate}",
           provider: "${RegisteredFood.provider}",

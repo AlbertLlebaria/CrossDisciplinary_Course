@@ -2895,6 +2895,22 @@ expo-asset@~7.0.0:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
+expo-barcode-scanner@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-7.0.0.tgz#75bb2dc66565f9e46ae1d4330452e2c96a4b5a7f"
+  integrity sha512-n8a/Xqtumw+o19PjFrPw12jfEyjA/UtJLAmXAiS0h+ociinjIkJKnLbCwUcCODLsgc6nn2lhd6TtZgQdvFEnbw==
+  dependencies:
+    lodash "^4.6.0"
+    prop-types "^15.6.0"
+
+expo-camera@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-7.0.0.tgz#3beee6c88df4d87dc3d0daefc8a9b3f5864a63bd"
+  integrity sha512-OukSvj9dzrTdADDfMZQlxfCyLjwg/nyTm2u9NDFQh6poEmu+IE2gn5ICnc7pmqR+ctAmU312KiRcLoBe/6sfIw==
+  dependencies:
+    lodash "^4.6.0"
+    prop-types "^15.6.0"
+
 expo-constants@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-7.0.1.tgz#87be02b6dae5c44a3246537452a0d77af15d46bf"
@@ -6135,6 +6151,13 @@ react-native-branch@~3.0.1:
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-3.0.1.tgz#5b07b61cbd290168cd3c3662e017ebe0f356d2ca"
   integrity sha512-vbcYxPZlpF5f39GAEUF8kuGQqCNeD3E6zEdvtOq8oCGZunHXlWlKgAS6dgBKCvsHvXgHuMtpvs39VgOp8DaKig==
 
+react-native-camera@^3.9.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-3.9.0.tgz#334d9d7be5476d673af4df954929958ecc36ed55"
+  integrity sha512-qUhog1yd7FQ9xRTxN1SP+T5f4uLuVY5eXx6mMlBCNsqvYSoKCWFHH1Kpil9fx7d2iOl/o09o/7kHNcSl9RkrkQ==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-native-chart-kit@^3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-3.10.0.tgz#9e975e968d79437000545a7fbbed2c1dd23c26db"
@@ -6410,15 +6433,14 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react@16.8.3:
-  version "16.8.3"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.8.3.tgz#c6f988a2ce895375de216edcfaedd6b9a76451d9"
-  integrity sha512-3UoSIsEq8yTJuSu0luO1QQWYbgGEILm+eJl2QN/VLDi7hL+EN18M3q3oVZwmVzzBJ3DkM7RMdRwBmZZ+b4IzSA==
+react@16.11:
+  version "16.11.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.11.0.tgz#d294545fe62299ccee83363599bf904e4a07fdbb"
+  integrity sha512-M5Y8yITaLmU0ynd0r1Yvfq98Rmll6q8AxaEe88c8e7LxO8fZ2cNgmFt0aGAS9wzf1Ao32NKXtCl+/tVVtkxq6g==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.13.3"
 
 read-pkg-up@^2.0.0:
   version "2.0.0"

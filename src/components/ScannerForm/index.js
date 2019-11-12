@@ -1,110 +1,68 @@
 import React, { useState, useEffect, AbortController } from 'react'
 import { View, Text, Picker } from "react-native";
-import { Button, Snackbar, TextInput } from "react-native-paper";
+import { Button, Snackbar, TextInput, IconButton, Colors, ActivityIndicator } from "react-native-paper";
 import DatePicker from 'react-native-datepicker'
-
+import { connect } from 'react-redux';
 import {
-    postFood,
     fetchFoodHouses,
-    fetchProviders
+    fetchProviders,
+    clearForm,
+    handleFormChange
+} from '../../actions/store.actions'
+import {
+    postFood
 } from '../../api/backendAPI'
 import { styles, theme } from './style.js'
 
 
-export default function ScannerForm(props) {
-    const parseDate = (d = new Date()) => {
-        let month = (d.getMonth() + 1),
-            day = d.getDate(),
-            year = d.getFullYear();
-
-        return `${year}-${month}-${day}`;
-    }
-    const [switchState, handleSwitchState] = useState("left")
-
-    const [providers, handleProviders] = useState([])
-
-    const [foodHouses, handleFoodHouses] = useState([])
+function ScannerForm(props) {
 
     const [isVisible, handleSnackBar] = useState(false)
 
-    const [formInputs, handleFormInputChange] = useState({
-        name: ' ',
-        expiracyDate: parseDate(),
-        recievedDate: parseDate(),
-        provider: '',
-        foodHouse: '',
-        amount: '0'
-    });
-
     const handleSubmit = () => {
-        postFood(formInputs, (err, response) => {
-            console.log(response)
+        postFood(props.form, (err, response) => {
+            if (!err)
+                handleSnackBar(true)
+            else 
+                handleSnackBar(true)
         })
     };
 
     useEffect(() => {
-        fetchFoodHouses((err, result) => {
-            if (!err) {
-                handleFoodHouses(result)
-            }
-        })
-
-        fetchProviders((err, result) => {
-            if (!err) {
-                console.log('hi', result)
-                handleProviders(result)
-            }
-        })
+        props.fetchFoodHouses()
+        props.fetchProviders()
     }, [])
 
-    return (
-        <View style={styles.container}>
-            <View
-                style={styles.form_content_switch}>
-                <Button
-                    onPress={() => handleSwitchState('left')}
-                    color="#FFFFFF"
-                    style={switchState === "left" ? {
-                        ...styles.form_content_switch__selected,
-                        ...styles.form_content_switch
-                    } :
-                        {
-                            ...styles.form_content_switch,
-                            ...styles.form_content_switch__unselected
-                        }} >
-                    <Text>Indtast Mad</Text>
-                </Button>
-                <Button
-                    onPress={() => handleSwitchState('right')}
-                    color="#FFFFFF"
-                    style={switchState === "right" ? {
-                        ...styles.form_content_switch__selected,
-                        ...styles.form_content_switch
-                    } :
-                        {
-                            ...styles.form_content_switch,
-                            ...styles.form_content_switch__unselected
-                        }
-                    } >
-                    <Text>Scan mad</Text>
-                </Button>
-            </View>
+    if (props.foodHouses.lenght === 0 || props.providers.lenght === 0) {
+        return (<View style={styles.container}>
+            <ActivityIndicator animating={true} color={Colors.green600} size="large" />
+        </View>)
+    } else {
+        return (<View style={styles.container}>
             <View style={styles.form_content}>
                 <Text style={styles.form__content__info_text}>Information om mad</Text>
-                <TextInput
-                    label='Product Name'
-                    theme={theme}
-                    underlineColor="transparent"
-                    placeholderTextColor="#FFFFFF"
-                    selectionColor="#FFFFFF"
-                    style={styles.form_content__input}
-                    value={formInputs.name}
-                    onChangeText={text => handleFormInputChange({ ...formInputs, name: text })}
-                />
+                <View style={styles.form_content__input}>
+                    <TextInput
+                        label={props.form.barcode !== null ? 'Barcode' : 'Product Name'}
+                        theme={theme}
+                        underlineColor="transparent"
+                        placeholderTextColor="#FFFFFF"
+                        selectionColor="#FFFFFF"
+                        value={props.form.barcode !== null ? props.form.barcode : props.form.name}
+                        onChangeText={text => {
+                            let key = props.form.barcode !== null ? 'barcode' : 'name';
+                            props.handleFormChange(key,text)
+                        }}
+                    />
+                    <Button icon="camera" mode="contained" color="#C4D6B0"
+                        onPress={() => props.navigation.navigate('Camera')}>
+                        Scann Barcode
+                            </Button>
+                </View>
                 <View style={styles.form_content__input}>
                     <Text style={styles.form__content__label}>From:</Text>
                     <DatePicker
-                        date={formInputs.expiracyDate}
+                        date={props.form.expiracyDate}
                         mode="date"
                         placeholder='Expiracty Date'
                         format="YYYY-MM-DD"
@@ -116,13 +74,13 @@ export default function ScannerForm(props) {
                             dateIcon: styles.dateIcon,
                             dateInput: styles.dateInput
                         }}
-                        onDateChange={(date) => { handleFormInputChange({ ...formInputs, expiracyDate: date }) }}
+                        onDateChange={(date) => { props.handleFormChange('expiracyDate', date ) }}
                     />
                 </View>
                 <View style={styles.form_content__input}>
                     <Text style={styles.form__content__label}>Recieved Date:</Text>
                     <DatePicker
-                        date={formInputs.expiracyDate}
+                        date={props.form.recievedDate}
                         mode="date"
                         placeholder='Recieved Date'
                         format="YYYY-MM-DD"
@@ -134,7 +92,7 @@ export default function ScannerForm(props) {
                             dateIcon: styles.dateIcon,
                             dateInput: styles.dateInput
                         }}
-                        onDateChange={(date) => { handleFormInputChange({ ...formInputs, expiracyDate: date }) }}
+                        onDateChange={(date) => { props.handleFormChange( 'recievedDate', date ) }}
                     />
                 </View>
                 <TextInput
@@ -144,18 +102,17 @@ export default function ScannerForm(props) {
                     placeholderTextColor="#FFFFFF"
                     selectionColor="#FFFFFF"
                     style={styles.form_content__input}
-                    value={formInputs.amount}
+                    value={props.form.amount}
                     keyboardType={'numeric'}
-                    onChangeText={text => handleFormInputChange({ ...formInputs, amount: text })}
+                    onChangeText={text => props.handleFormChange( 'amount', text )}
                 />
                 <View style={styles.form_content__input}>
                     <Text style={styles.form__content__label}>Provider</Text>
                     <Picker
                         selectedValue={'this.state.language}'}
                         style={styles.form_content_picker}
-                        onValueChange={(itemValue, itemIndex) => handleFormInputChange({ ...formInputs, provider: itemValue })}>
-                        {providers.map(provider => {
-                            console.log(provider)
+                        onValueChange={(itemValue, itemIndex) => props.handleFormChange('provider', itemValue )}>
+                        {props.providers.map(provider => {
                             return (
                                 <Picker.Item
                                     key={provider.id}
@@ -168,16 +125,16 @@ export default function ScannerForm(props) {
                 <View style={styles.form_content__input}>
                     <Text style={styles.form__content__label}>Food Store:</Text>
                     <Picker
-                        selectedValue={formInputs.foodHouse}
+                        selectedValue={props.form.foodHouse}
                         style={styles.form_content_picker}
-                        onValueChange={(itemValue, itemIndex) => handleFormInputChange({ ...formInputs, provider: itemValue })}>
-                        {foodHouses.map(provider => {
+                        onValueChange={(itemValue, itemIndex) => props.handleFormChange( 'foodHouse', itemValue )}>
+                        {props.foodHouses.map(foodHouse => {
                             return (
                                 <Picker.Item
                                     style={{ width: '100%' }}
-                                    key={provider.id}
-                                    label={provider.name}
-                                    value={provider.id} />
+                                    key={foodHouse.id}
+                                    label={foodHouse.name}
+                                    value={foodHouse.id} />
                             )
                         })}
                     </Picker>
@@ -187,11 +144,10 @@ export default function ScannerForm(props) {
                     color="#FFFFFF"
                     style={styles.submit_button}
                     onPress={() => {
-                        handleSnackBar(true)
                         handleSubmit()
                     }}>
                     Tilmeld
-            </Button>
+                </Button>
             </View>
             <Snackbar
                 style={{ color: '#C4D6B0' }}
@@ -201,11 +157,11 @@ export default function ScannerForm(props) {
                     label: 'Continue',
                     onPress: () => {
                         handleSnackBar(false)
-                        // Do something
+                        props.clearForm()
                     },
                 }}>
                 Mad er blevet registreret med succes
-            </Snackbar>
+                </Snackbar>
             <Button
                 style={{
                     position: 'absolute',
@@ -215,9 +171,30 @@ export default function ScannerForm(props) {
                 }}
                 color="#FFFFFF"
                 raised
-                onPress={() => { props.navigation.navigate('Home') }}>
+                onPress={() => {
+                    props.navigation.navigate('Home')
+                    props.clearForm()
+
+                }}>
                 Tilbage
-            </Button>
-        </View >
-    )
+                </Button>
+        </View >)
+    }
 }
+
+const mapStateToProps = function (state) {
+    return {
+        providers: state.API_store.providers,
+        foodHouses: state.API_store.foodHouses,
+        form: state.API_store.formFields,
+
+    }
+}
+const mapDispatchToProps = {
+    fetchFoodHouses,
+    fetchProviders,
+    handleFormChange,
+    clearForm
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScannerForm);

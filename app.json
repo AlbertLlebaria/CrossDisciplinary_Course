@@ -3,7 +3,7 @@
   "displayName": "SLL",
   "expo": {
     "name": "SLL",
-    "slug": "expo-template-bare",
+    "slug": "native-cross-disciplinary",
     "privacy": "unlisted",
     "sdkVersion": "35.0.0",
     "version": "1.0.0",
@@ -12,6 +12,9 @@
       "ios",
       "android",
       "web"
-    ]
+    ],
+    "android": {
+      "package": "com.SLL.dada"
+    }
   }
 }
