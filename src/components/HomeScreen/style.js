@@ -2,11 +2,18 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
     home_tittle: {
-        top: 67,
+        marginTop: 50,
+        marginBottom: 35,
         fontWeight: 'bold',
         fontSize: 30,
         lineHeight: 37,
-        textAlign: 'center'
+        textAlign: 'center',
+    },
+    bottom_line: {
+        width: '50%',
+        borderBottomColor: 'black',
+        borderBottomWidth: 2,
+        height: 1
     },
     icon_button: {
         width: 80,

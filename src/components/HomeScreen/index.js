@@ -3,22 +3,28 @@ import { View, StyleSheet, Image } from "react-native";
 import { IconButton, Text, Button } from 'react-native-paper';
 import style from './style'
 
-export default functionHomeScreen = (props) => {
+export default function HomeScreen(props){
 
     const styles = StyleSheet.create(style)
 
     const handleClickedMenuButton = (path) => {
-        this.props.navigation.navigate(path)
+        props.navigation.navigate(path)
     }
 
     return (
         <View style={{
             flex: 1
         }}>
-            <View>
+            <View style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+            }}>
                 <Text style={style.home_tittle}>
                     Vælg nedenfor hvad du gerne vil foretage dig
             </Text>
+                <View style={styles.bottom_line}></View>
             </View>
             <View style={{
                 flex: 1,
@@ -99,8 +105,7 @@ export default functionHomeScreen = (props) => {
             <Button
                 style={style.loggin_button}
                 raised
-                color="#ffffff"
-                onPress={() => handleLogin()}>
+                color="#ffffff">
                 Videre
             </Button>
         </View>

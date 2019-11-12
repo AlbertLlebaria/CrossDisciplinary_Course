@@ -1,36 +1,131 @@
-import {gql} from "apollo-boost"
+import { gql } from "apollo-boost"
 import ApolloClient from 'apollo-boost/lib/index'
+import Constants from 'expo-constants';
+
+const { manifest } = Constants;
+const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
+  ? manifest.debuggerHost.split(`:`).shift().concat(`:4000`)
+  : `api.example.com`;
+
+console.log(api)
 
 const client = new ApolloClient({
-    uri: 'https://localhost:4000',
+  uri: `http://${api}`,
 });
 
 
-export const fetchFood = (callback)=>{
-    client
-        .query({
-            query: gql`
+export const fetchFood = (callback) => {
+  client
+    .query({
+      query: gql`
       {
         Food{
           name
         }
       }
     `
-        })
-        .then(result => callback(result))
-        .catch(error => console.log(error));
+    })
+    .then(result => callback(result))
+    .catch(error => console.log(error));
 }
 
-const ADD_TODO = gql`
-  mutation AddTodo($type: String!) {
-    addTodo(type: $type) {
-      id
-      type
-    }
-  }
-`;
-
-export const postFood = (food,callback)=>{
+/**
+ * 
+ * @param {function(boolean,object)} callback 
+ */
+export const fetchProviders = (callback) => {
   client
-    .q
+    .query({
+      query: gql`
+      {
+        providers{
+          id,
+          name,
+          city,
+          address,
+          coordinate,
+        }
+      }
+    `
+    })
+    .then(result => callback(false,result.data.providers))
+    .catch(error => callback(true,error));
+}
+
+
+export const fetchFoodHouses = (callback) => {
+  client
+    .query({
+      query: gql`
+      {
+        foodHouses{
+          id,
+          name,
+          city,
+          address,
+          coordinate 
+        }
+      }
+    `
+    })
+    .then(result => callback(false, result.data.foodHouses))
+    .catch(error => console.log(true, error));
+}
+/**
+ * 
+ * @param {*} RegisteredFood 
+ * @param {*} callback 
+ */
+export const postFood = (RegisteredFood, callback) => {
+  client
+    .mutate({
+      mutation: gql`mutation {
+        postFood(input:{
+          name: "${RegisteredFood.name}"
+          expiracyDate: "${RegisteredFood.expiracyDate}"
+          recievedDate: "${RegisteredFood.recievedDate}",
+          provider: "${RegisteredFood.provider}",
+          amount: ${RegisteredFood.amount},
+          foodHouse: "${RegisteredFood.foodHouse}"
+        })
+          {
+             name
+          }
+      }
+  `
+    })
+    .then(result => {
+      callback(false, result)
+    })
+    .catch(error => {
+      callback(true, error)
+    });
+
+}
+
+export const fetchFoodFromStoreBetweenDates = (filters, callback) => {
+  console.log(filters)
+  client
+    .query({
+      query: gql`{
+      foodFromHouseAndBetween(
+        from: "${filters.from}",
+        to: "${filters.to}",
+        store: "${filters.store}",
+        category: "${filters.category}"
+        ) {
+          name,
+          category,
+          recievedDate,
+          amount,
+      }
+    }
+`
+    })
+    .then(result => {
+      callback(false, result.data.foodFromHouseAndBetween)
+    })
+    .catch(error => {
+      callback(true, error)
+    });
 }
