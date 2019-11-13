@@ -109,7 +109,6 @@ export const postFood = (RegisteredFood, callback) => {
 }
 
 export const fetchFoodFromStoreBetweenDates = (filters, callback) => {
-  console.log(filters)
   client
     .query({
       query: gql`{
@@ -129,6 +128,62 @@ export const fetchFoodFromStoreBetweenDates = (filters, callback) => {
     })
     .then(result => {
       callback(false, result.data.foodFromHouseAndBetween)
+    })
+    .catch(error => {
+      callback(true, error)
+    });
+}
+
+export const fetchFoodFromProvider = (provider, date, callback) => {
+  client
+    .query({
+      query: gql`{
+        foodFromProvider(
+        provider: "${provider}",
+        recievedDate: "${date}"
+        ) {
+          id,
+          name,
+          expiracyDate,
+          recievedDate,
+          amount,
+          category,
+          foodHouse,
+          provider
+      }
+    }
+`
+    })
+    .then(result => {
+      callback(false, result.data.foodFromProvider)
+    })
+    .catch(error => {
+      callback(true, error)
+    });
+}
+
+export const fetchFoodFromFoodHouse = (foodHouse,date, callback) => {
+  client
+    .query({
+      query: gql`{
+        foodFromStore(
+          foodHouse: "${foodHouse}",
+          recievedDate: "${date}"
+        ) {
+          id,
+          name,
+          expiracyDate,
+          recievedDate,
+          amount,
+          category,
+          provider,
+          foodHouse
+      }
+    }
+`
+    })
+    .then(result => {
+      callback(false, result.data.foodFromStore)
     })
     .catch(error => {
       callback(true, error)

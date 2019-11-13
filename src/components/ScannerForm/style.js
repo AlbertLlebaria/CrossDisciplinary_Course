@@ -16,11 +16,11 @@ export const styles = StyleSheet.create({
     },
     form_content: {
         width: '80%',
-        margin: 13,
+        margin: 5,
     },
     submit_button: {
         backgroundColor: '#C4D6B0',
-        marginTop: 15,
+        marginTop: 10,
     },
     form_content__input: {
         backgroundColor: '#D3D3D3',

@@ -8,13 +8,25 @@ export const SET_BARCODE = 'SET_BARCODE';
 export const CLEAR_BARCODE = 'CLEAR_BARCODE';
 export const CLEAR_FORM = 'CLEAR_FORM';
 export const FORM_FIELD_CHANGE = 'FORM_FIELD_CHANGE';
+export const FECTH_FOOD = 'FECTH_FOOD';
+export const CLEAR_FOOD = 'CLEAR_FOOD';
 
-
+export function clearFood() {
+    return {
+        type: CLEAR_FOOD,
+    }
+}
 export function handleFormChange(key,value) {
     return {
         type: FORM_FIELD_CHANGE,
         key,
         value
+    }
+}
+export function receivedFood(food) {
+    return {
+        type: FECTH_FOOD,
+        food
     }
 }
 
@@ -54,6 +66,26 @@ export function fetchFoodHouses() {
         return SLL_API.fetchFoodHouses((err, result) => {
             if (!err) {
                 dispatch(receivedFoodHouses(result))
+            }
+        })
+    }
+}
+
+export function fetchFoodFromStore(store) {
+    return function (dispatch) {
+        return SLL_API.fetchFoodFromFoodHouse(store,(err, result) => {
+            if (!err) {
+                dispatch(receivedFood(result))
+            }
+        })
+    }
+}
+
+export function fetchFoodFromProvider(provider,date) {
+    return function (dispatch) {
+        return SLL_API.fetchFoodFromProvider(provider,date,(err, result) => {
+            if (!err) {
+                dispatch(receivedFood(result))
             }
         })
     }

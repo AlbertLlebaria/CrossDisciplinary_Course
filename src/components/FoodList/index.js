@@ -1,34 +1,116 @@
-import * as React from 'react';
-import {List, Checkbox} from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { List, Text, Button } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { View } from 'react-native'
+import {
+    fetchFoodFromProvider,
+    fetchProviders,
+    clearFood
+} from '../../actions/store.actions'
+import DatePicker from 'react-native-datepicker'
 
-class AccordionList extends React.Component {
-    state = {
-        expanded: true
-    };
+function FoodList(props) {
+    useEffect(() => {
+        props.fetchProviders();
+    }, [])
 
-    foodHouses = [
-        {name: 'Fakta', location: 'FOEWP', food: [{name: 'apple', amount: 20}, {name: 'orange', amount: 20}]},
-        {name: 'Netto', location: 'FOEWP', food: [{name: 'apple', amount: 20}]},
-        {name: 'Netto', location: 'FOEWP', food: [{name: 'apple', amount: 20}]},
-        {name: 'Netto', location: 'FOEWP', food: [{name: 'apple', amount: 20}, {name: 'Bananas', amount: 20}]},
-        {name: 'Fakta', location: 'FOEWP', food: [{name: 'apple', amount: 20}, {name: 'Chickens', amount: 20}]}];
+    const parseDate = (d = new Date()) => {
+        let month = (d.getMonth() + 1),
+            day = d.getDate(),
+            year = d.getFullYear();
 
-    _handlePress = () =>
-        this.setState({
-            expanded: !this.state.expanded
-        });
+        return `${year}-${month}-${day}`;
+    }
+    const [fromDate, handleFromDate] = useState(parseDate())
 
-    render() {
-        return (
-            <List.Section title="Food Houses">
-                {this.foodHouses.map((foodHouse, index) => {
+    const [expandedControl, handleExpandedProviders] = useState(props.providers.map(el => false))
+
+
+    return (
+        <View style={{
+            marginTop: 30,
+            flex: 1,
+            textAlign: 'center'
+        }}>
+            <View style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
+            }}>
+                <Text style={{
+                    marginTop: 50,
+                    marginBottom: 20,
+                    fontWeight: 'bold',
+                    fontSize: 30,
+                    lineHeight: 37,
+                    textAlign: 'center',
+                }}>
+                    Allerede registeret mad
+            </Text>
+                <View style={{
+                    width: '50%',
+                    borderBottomColor: 'black',
+                    borderBottomWidth: 2,
+                    height: 1
+                }}>
+
+                </View>
+            </View>
+            <View style={{
+                padding: 2,
+                borderRadius: 5,
+                color: "#FFFFFF",
+                margin: 5,
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <DatePicker
+                    style={{ width: 200 }}
+                    date={fromDate}
+                    mode="date"
+                    placeholder="select date"
+                    format="YYYY-MM-DD"
+                    minDate="2019-05-01"
+                    maxDate="2021-06-01"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                        dateIcon: {
+                            position: 'absolute',
+                            left: 0,
+                            top: 4,
+                            marginLeft: 0
+                        },
+                        dateInput: {
+                            marginLeft: 36,
+                            borderWidth: 0
+
+                        }
+                        // ... You can check the source to find the other keys.
+                    }}
+                    onDateChange={(date) => {
+                        handleFromDate(date)
+                        handleExpandedProviders(expandedControl.map(el => false))
+                    }}
+                />
+            </View>
+            <List.Section title="Providers">
+                {props.providers.map((provider, index) => {
                     return (<List.Accordion
-                        key={`${foodHouse.name}-${index}`}
-                        title={foodHouse.name}
-                        description={`Location: ${foodHouse.location}`}
-                        left={props => <List.Icon {...props} icon="home"/>}>
+                        key={`${provider.name}-${index}`}
+                        title={provider.name}
+                        onPress={() => {
+                            props.fetchFoodFromProvider(provider.id, fromDate)
+                            expandedControl[index] = true
+                            handleExpandedProviders(expandedControl)
+                        }}
+                        expanded={expandedControl[index]}
+                        description={`Location: ${provider.address}, ${provider.city}`}
+                        left={props => <List.Icon {...props} icon="home" />}>
                         {
-                            foodHouse.food.map((food, index) =>
+                            props.food.map((food, index) =>
                                 <List.Item
                                     key={`${food.name}-${index}`}
                                     title={food.name}
@@ -38,13 +120,33 @@ class AccordionList extends React.Component {
                     </List.Accordion>)
                 })}
             </List.Section>
-        );
-    }
-}
-
-
-export default function Index() {
-    return (
-        <AccordionList></AccordionList>
+            <Button
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    backgroundColor: '#C4D6B0'
+                }}
+                color="#FFFFFF"
+                raised
+                onPress={() => {
+                    props.navigation.navigate('Home')
+                }}>
+                Tilbage
+                </Button>
+        </View>
     )
 }
+const mapStateToProps = function (state) {
+    return {
+        food: state.API_store.food,
+        providers: state.API_store.providers
+    }
+}
+const mapDispatchToProps = {
+    fetchFoodFromProvider,
+    fetchProviders,
+    clearFood
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FoodList);

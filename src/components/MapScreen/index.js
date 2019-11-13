@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Button } from 'react-native-paper'
 import MapView from "react-native-maps";
-import BarChart from "../BarChart";
+import LineChart from "../LineChart";
 import { fetchFoodHouses } from '../../api/backendAPI'
 const { width, height } = Dimensions.get("window");
 
@@ -24,25 +24,22 @@ export default class screens extends Component {
             ],
             region: {
                 latitude: 55.679062,
-                longitude:  12.565472,
+                longitude: 12.565472,
                 latitudeDelta: 0.04864195044303443,
                 longitudeDelta: 0.040142817690068,
             },
-            test: false,
             current: null
         };
-
+        this.handleDeselect = this.handleDeselect.bind(this);
         this.handleClick = this.handleClick.bind(this);
-        this.handleCloseChart = this.handleCloseChart.bind(this);
     }
 
     handleClick(i) {
-        this.setState({ ...this.state, current: this.state.markers[i], test: true })
+        this.setState({ ...this.state, current: this.state.markers[i] })
     }
 
-    handleCloseChart() {
-        this.setState({ ...this.state, test: false })
-
+    handleDeselect() {
+        this.setState({ ...this.state, current: null })
     }
 
     componentWillMount() {
@@ -151,7 +148,7 @@ export default class screens extends Component {
                     )}
                     style={styles.scrollView}
                     contentContainerStyle={styles.endPadding}>
-                    {!this.state.test && this.state.markers.map((marker, index) => (
+                    {this.state.current === null && this.state.markers.map((marker, index) => (
                         <View style={styles.card} key={index}>
                             <View style={styles.textContent}>
                                 <Text numberOfLines={1} style={styles.cardtitle}>{marker.name}</Text>
@@ -162,17 +159,17 @@ export default class screens extends Component {
                                         backgroundColor: '#C4D6B0'
                                     }}
                                     color="#FFFFFF"
-                                    onPress={() => { this.handleClick(index) }}>Inspect</Button>
+                                    onPress={() => { this.handleClick(index) }}>Analysere</Button>
                             </View>
                         </View>
                     ))}
                 </Animated.ScrollView>
-                {this.state.test && <TouchableOpacity style={styles.overlay}>
-                    <BarChart
+                {this.state.current && <TouchableOpacity style={styles.overlay}>
+                    <LineChart
+                        handleDeselect={this.handleDeselect}
                         height={CARD_HEIGHT - 20}
                         width={Dimensions.get("window").width * 0.90}
-                        store={this.state.current}
-                        handleCloseChart={this.handleCloseChart} />
+                        store={this.state.current} />
                 </TouchableOpacity>}
                 <Button
                     style={{
@@ -236,8 +233,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     marker: {
-        width: 8,
-        height: 8,
+        width: 12,
+        height: 12,
         borderRadius: 4,
         backgroundColor: "rgba(130,4,150, 0.9)",
     },

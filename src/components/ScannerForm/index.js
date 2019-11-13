@@ -43,7 +43,7 @@ function ScannerForm(props) {
                 <Text style={styles.form__content__info_text}>Information om mad</Text>
                 <View style={styles.form_content__input}>
                     <TextInput
-                        label={props.form.barcode !== null ? 'Barcode' : 'Product Name'}
+                        label={props.form.barcode !== null ? 'Barcode' : 'Produktnavn'}
                         theme={theme}
                         underlineColor="transparent"
                         placeholderTextColor="#FFFFFF"
@@ -60,11 +60,11 @@ function ScannerForm(props) {
                             </Button>
                 </View>
                 <View style={styles.form_content__input}>
-                    <Text style={styles.form__content__label}>From:</Text>
+                    <Text style={styles.form__content__label}>Udløbsdato:</Text>
                     <DatePicker
                         date={props.form.expiracyDate}
                         mode="date"
-                        placeholder='Expiracty Date'
+                        placeholder='Udløbsdato'
                         format="YYYY-MM-DD"
                         minDate="2016-05-01"
                         maxDate="2021-06-01"
@@ -78,11 +78,11 @@ function ScannerForm(props) {
                     />
                 </View>
                 <View style={styles.form_content__input}>
-                    <Text style={styles.form__content__label}>Recieved Date:</Text>
+                    <Text style={styles.form__content__label}>Modtaget dato:</Text>
                     <DatePicker
                         date={props.form.recievedDate}
                         mode="date"
-                        placeholder='Recieved Date'
+                        placeholder='Modtaget dato'
                         format="YYYY-MM-DD"
                         minDate="2016-05-01"
                         maxDate="2021-06-01"
@@ -96,7 +96,7 @@ function ScannerForm(props) {
                     />
                 </View>
                 <TextInput
-                    label='Amount'
+                    label='Beløb'
                     theme={theme}
                     underlineColor="transparent"
                     placeholderTextColor="#FFFFFF"
@@ -123,7 +123,7 @@ function ScannerForm(props) {
                     </Picker>
                 </View>
                 <View style={styles.form_content__input}>
-                    <Text style={styles.form__content__label}>Food Store:</Text>
+                    <Text style={styles.form__content__label}>Food butik:</Text>
                     <Picker
                         selectedValue={props.form.foodHouse}
                         style={styles.form_content_picker}

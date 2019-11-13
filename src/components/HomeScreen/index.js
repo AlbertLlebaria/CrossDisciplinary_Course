@@ -102,12 +102,6 @@ export default function HomeScreen(props){
                     <Text style={styles.button_label} >Kort over Butik</Text>
                 </View>
             </View>
-            <Button
-                style={style.loggin_button}
-                raised
-                color="#ffffff">
-                Videre
-            </Button>
         </View>
     );
 }

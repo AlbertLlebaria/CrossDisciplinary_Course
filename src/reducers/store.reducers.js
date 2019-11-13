@@ -3,7 +3,9 @@ import {
     FETCH_FOOD_HOUSES,
     FETCH_PROVIDERS,
     CLEAR_FORM,
-    FORM_FIELD_CHANGE
+    FORM_FIELD_CHANGE,
+    FECTH_FOOD,
+    CLEAR_FOOD
 } from '../actions/store.actions'
 
 const parseDate = (d = new Date()) => {
@@ -29,11 +31,21 @@ const initialState = {
     providers: [],
     foodHouses: [],
     food: [],
-    formFields: {...initSateForm}
+    formFields: { ...initSateForm }
 };
 
 export const storeReducer = (state = initialState, action) => {
     switch (action.type) {
+        case CLEAR_FOOD:
+            return {
+                ...state,
+                food: []
+            }
+        case FECTH_FOOD:
+            return {
+                ...state,
+                food: action.food
+            }
         case FORM_FIELD_CHANGE:
             return {
                 ...state,

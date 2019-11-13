@@ -63,9 +63,11 @@ const typeDefs = gql`
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     foods: [Food],
+    foodFromProvider(provider:String!,recievedDate:ISODate):[Food],
+    foodFromStore(foodHouse:String!,recievedDate:ISODate):[Food],
     providers:[Provider],
     foodHouses:[Provider],
-    foodFromHouseAndBetween(from: ISODate!, to: ISODate!, store: String!, category:String!):[Food]
+    foodFromHouseAndBetween(from: ISODate!, to: ISODate!, store: String!, category:[String]!):[Food]
   }
   type Mutation{
     postFood(input: CreateFoodInput!): Food!,
@@ -161,11 +163,32 @@ const resolvers = {
     foods: () => foods,
     providers: () => providers,
     foodHouses: () => foodHouses,
+    foodFromProvider: (_, input) => {
+      let found = [];
+      foods.forEach(el => {
+        if (el.provider === input.provider){
+          if(!input.recievedDate){
+            found.push(el)
+          }else if( new Date(el.recievedDate).getTime() === new Date(input.recievedDate).getTime()){
+            found.push(el)
+          }
+        }
+      })
+      return found;
+    },
+    foodFromStore: (_, input) => {
+      let found = [];
+      foods.forEach(el => {
+        if (el.foodHouse === input.foodHouse)
+          found.push(el)
+      })
+      return found;
+    },
     foodFromHouseAndBetween: (_, input) => {
       let found = [];
 
       foods.forEach(el => {
-        if (el.foodHouse === input.store && el.category === input.category &&
+        if (el.foodHouse === input.store && input.category.includes(el.category) &&
           new Date(el.recievedDate) >= new Date(input.from) || new Date(el.recievedDate) <= new Date(input.to))
           found.push(el)
       })
