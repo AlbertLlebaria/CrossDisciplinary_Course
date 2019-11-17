@@ -5,7 +5,7 @@ import Constants from 'expo-constants';
 const { manifest } = Constants;
 const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
   ? manifest.debuggerHost.split(`:`).shift().concat(`:4000`)
-  : `api.example.com`;
+  : `http://enigmatic-refuge-22568.herokuapp.com:45123/`;
 
 console.log(api)
 

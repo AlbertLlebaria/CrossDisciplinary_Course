@@ -1,8 +1,8 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 85227,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": "https://aq-cn8.allebaria94.crossdisciplinary-course.exp.direct",
   "packagerNgrokUrl": "https://packager.aq-cn8.allebaria94.crossdisciplinary-course.exp.direct",
   "ngrokPid": 85241,
