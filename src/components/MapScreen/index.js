@@ -10,18 +10,18 @@ import {
 import { Button } from 'react-native-paper'
 import MapView from "react-native-maps";
 import LineChart from "../LineChart";
-import { fetchFoodHouses } from '../../api/backendAPI'
+import { fetchFoodHouses } from '../../actions/store.actions'
+import {connect} from 'react-redux'
+
 const { width, height } = Dimensions.get("window");
 
 const CARD_HEIGHT = 100;
 const CARD_WIDTH = (width / 2) - 30;
 
-export default class screens extends Component {
+class MapScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            markers: [
-            ],
             region: {
                 latitude: 55.679062,
                 longitude: 12.565472,
@@ -35,7 +35,7 @@ export default class screens extends Component {
     }
 
     handleClick(i) {
-        this.setState({ ...this.state, current: this.state.markers[i] })
+        this.setState({ ...this.state, current: this.props.foodHouses[i] })
     }
 
     handleDeselect() {
@@ -45,19 +45,15 @@ export default class screens extends Component {
     componentWillMount() {
         this.index = 0;
         this.animation = new Animated.Value(0);
-        fetchFoodHouses((err, response) => {
-            if (!err) {
-                this.setState({ ...this.state, markers: response })
-            }
-        })
+        this.props.fetchFoodHouses();
     }
     componentDidMount() {
         // We should detect when scrolling has stopped then animate
         // We should just debounce the event listener here
         this.animation.addListener(({ value }) => {
             let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-            if (index >= this.state.markers.length) {
-                index = this.state.markers.length - 1;
+            if (index >= this.props.foodHouses.length) {
+                index = this.props.foodHouses.length - 1;
             }
             if (index <= 0) {
                 index = 0;
@@ -67,7 +63,7 @@ export default class screens extends Component {
             this.regionTimeout = setTimeout(() => {
                 if (this.index !== index) {
                     this.index = index;
-                    const { coordinate } = this.state.markers[index];
+                    const { coordinate } = this.props.foodHouses[index];
                     this.map.animateToRegion(
                         {
                             ...coordinate,
@@ -82,7 +78,7 @@ export default class screens extends Component {
     }
 
     render() {
-        const interpolations = this.state.markers.map((marker, index) => {
+        const interpolations = this.props.foodHouses.map((marker, index) => {
             const inputRange = [
                 (index - 1) * CARD_WIDTH,
                 index * CARD_WIDTH,
@@ -108,7 +104,7 @@ export default class screens extends Component {
                     initialRegion={this.state.region}
                     style={styles.container}
                 >
-                    {this.state.markers.map((marker, index) => {
+                    {this.props.foodHouses.map((marker, index) => {
                         const scaleStyle = {
                             transform: [
                                 {
@@ -148,7 +144,7 @@ export default class screens extends Component {
                     )}
                     style={styles.scrollView}
                     contentContainerStyle={styles.endPadding}>
-                    {this.state.current === null && this.state.markers.map((marker, index) => (
+                    {this.state.current === null && this.props.foodHouses.map((marker, index) => (
                         <View style={styles.card} key={index}>
                             <View style={styles.textContent}>
                                 <Text numberOfLines={1} style={styles.cardtitle}>{marker.name}</Text>
@@ -169,7 +165,7 @@ export default class screens extends Component {
                         handleDeselect={this.handleDeselect}
                         height={CARD_HEIGHT - 20}
                         width={Dimensions.get("window").width * 0.90}
-                        store={this.state.current} />
+                        foodHouse={this.state.current} />
                 </TouchableOpacity>}
                 <Button
                     style={{
@@ -255,3 +251,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 1)',
     },
 });
+
+const mapStateToProps = function (state) {
+    return {
+        foodHouses: state.API_store.foodHouses
+    }
+}
+const mapDispatchToProps = {
+    fetchFoodHouses
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);

@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { LineChart } from "react-native-chart-kit";
 import DatePicker from 'react-native-datepicker'
 import { Button, ActivityIndicator, Colors, IconButton } from 'react-native-paper';
 import { reduce } from 'lodash'
 
-import { fetchFoodFromStoreBetweenDates } from '../../api/backendAPI'
+import { connect } from 'react-redux'
+import { fetchFoodFromStoreBetweenDates, clearFood } from '../../actions/store.actions'
 
 import style from './style.js'
 
-export default function FoodLineChart(props) {
+function FoodLineChart(props) {
     const parseDate = (d = new Date()) => {
         let month = (d.getMonth() + 1),
             day = d.getDate(),
@@ -20,9 +21,7 @@ export default function FoodLineChart(props) {
 
     const [fromDate, handleFromDate] = useState(parseDate())
     const [toDate, handleToDate] = useState(parseDate())
-    const [labels, handleLabels] = useState([])
-    const [plotData, handlePlotData] = useState({})
-    const [isLoading, handleLogin] = useState(false)
+    const [isLoading, handleLoading] = useState(false)
 
     const [selectedCategory, handleSelected] = useState([])
 
@@ -35,7 +34,8 @@ export default function FoodLineChart(props) {
             'Grains and Cereals',
             'Meat and alternatives',
             'Other'
-        ]
+        ];
+
     const chartConfig = {
         backgroundGradientFrom: '#fff',
         backgroundGradientTo: '#fff',
@@ -44,40 +44,47 @@ export default function FoodLineChart(props) {
     }
 
     const handleToggleGroup = (value) => {
+        let newSelectedCategories = []
         if (selectedCategory.includes(value)) {
-            handleSelected(selectedCategory.filter(el => el !== value))
+            newSelectedCategories = selectedCategory.filter(el => el !== value);
         } else {
-            handleLogin(true)
-            fetchFoodFromStoreBetweenDates({
+            newSelectedCategories = [...selectedCategory, value]
+        }
+
+        if (newSelectedCategories.length > 0) {
+            handleLoading(true)
+            props.fetchFoodFromStoreBetweenDates({
                 from: fromDate,
                 to: toDate,
-                store: props.store.id,
-                category: [...selectedCategory, value]
-            }, (err, result) => {
-                if (!err) {
-                    newLabels = []
-                    let parsed = reduce(result, function (result, value, key) {
-                        if (result[value.category]) {
-                            if (result[value.category][value.recievedDate])
-                                result[value.category][value.recievedDate] = result[value.category][value.recievedDate] + value.amount
-                            else
-                                result[value.category][value.recievedDate] = value.amount
-                        } else {
-                            newLabels.push(value.recievedDate)
-                            result[value.category] = {
-                                [value.recievedDate]: value.amount
-                            }
-                        }
-                        return result;
-                    }, {});
-                    handleLabels(newLabels)
-                    handlePlotData(parsed)
-                    handleSelected([...selectedCategory, value])
-                }
-                handleLogin(false)
+                store: props.foodHouse.id,
             })
         }
+        handleSelected(newSelectedCategories)
     }
+    if (isLoading && props.food.length > 0) {
+        handleLoading(false)
+    }
+    useEffect(() => {
+        return () => {
+            props.clearFood();
+        }
+    }, []);
+    let labels = []
+    let parsed = reduce(props.food, function (result, value, key) {
+        if (result[value.category]) {
+            if (result[value.category][value.recievedDate])
+                result[value.category][value.recievedDate] = result[value.category][value.recievedDate] + value.amount
+            else
+                result[value.category][value.recievedDate] = value.amount
+        } else {
+            labels.push(value.recievedDate)
+            result[value.category] = {
+                [value.recievedDate]: value.amount
+            }
+        }
+        return result;
+    }, {});
+
 
     return (
         <View style={{
@@ -188,14 +195,17 @@ export default function FoodLineChart(props) {
                             }
                             )(),
                             datasets: (() => {
-                                const result = Object.keys(plotData).map(category => {
-                                    return {
-                                        data: Object.keys(plotData[category]).map(key => {
-                                            return plotData[category][key]
-                                        })
-                                    }
-                                })
-                                console.log(result, plotData)
+                                const result = Object.keys(parsed).map(category => {
+
+                                    if (selectedCategory.includes(category))
+                                        return {
+                                            data: Object.keys(parsed[category]).map(key => {
+                                                return parsed[category][key]
+                                            })
+                                        }
+
+                                }).filter(el=> typeof(el) !== "undefined");
+                                console.log(result,parsed)
                                 if (result.length == 0)
                                     return [{ data: [0] }]
                                 else return result
@@ -214,3 +224,16 @@ export default function FoodLineChart(props) {
     )
 
 }
+
+
+const mapStateToProps = function (state) {
+    return {
+        food: state.API_store.food
+    }
+}
+const mapDispatchToProps = {
+    fetchFoodFromStoreBetweenDates,
+    clearFood
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FoodLineChart);

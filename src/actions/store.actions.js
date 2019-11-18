@@ -71,16 +71,16 @@ export function fetchFoodHouses() {
     }
 }
 
-export function fetchFoodFromStore(store) {
+
+export function fetchFoodFromStoreBetweenDates(filters) {
     return function (dispatch) {
-        return SLL_API.fetchFoodFromFoodHouse(store,(err, result) => {
+        return SLL_API.fetchFoodFromStoreBetweenDates(filters,(err, result) => {
             if (!err) {
                 dispatch(receivedFood(result))
             }
         })
     }
 }
-
 export function fetchFoodFromProvider(provider,date) {
     return function (dispatch) {
         return SLL_API.fetchFoodFromProvider(provider,date,(err, result) => {
