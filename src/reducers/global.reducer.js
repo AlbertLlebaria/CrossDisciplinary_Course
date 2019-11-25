@@ -4,7 +4,7 @@ import {
     START_LOADING,
     STOP_LOADING,
     CLEAN_ERROR,
-    ERROR
+    SET_ERROR
 } from '../actions/global.actions'
 
 const initialState = {
@@ -41,7 +41,7 @@ export const globalReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false
             };
-        case ERROR:
+        case SET_ERROR:
             return {
                 ...state,
                 error: action.error

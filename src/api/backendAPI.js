@@ -77,11 +77,12 @@ export const fetchFoodHouses = (callback) => {
  * @param {*} callback 
  */
 export const postFood = (RegisteredFood, callback) => {
-  console.log(RegisteredFood)
+
   let nameField = RegisteredFood.barcode !== null ?
     `barcode: "${RegisteredFood.barcode}"` :
     `name: "${RegisteredFood.name}"`
 
+  console.log(RegisteredFood)
   client
     .mutate({
       mutation: gql`mutation {
@@ -161,7 +162,7 @@ export const fetchFoodFromProvider = (provider, date, callback) => {
     });
 }
 
-export const fetchFoodFromFoodHouse = (foodHouse,date, callback) => {
+export const fetchFoodFromFoodHouse = (foodHouse, date, callback) => {
   client
     .query({
       query: gql`{
