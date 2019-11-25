@@ -127,7 +127,16 @@ function FoodLineChart(props) {
                         }
                         // ... You can check the source to find the other keys.
                     }}
-                    onDateChange={(date) => { handleFromDate(date) }}
+                    onDateChange={(date) => {
+                        handleFromDate(date)
+                        if (selectedCategory.length > 0) {
+                            props.fetchFoodFromStoreBetweenDates({
+                                from: date,
+                                to: toDate,
+                                store: props.foodHouse.id,
+                            })
+                        }
+                    }}
                 />
             </View>
             <View style={styles.datepicker_input}>
@@ -154,9 +163,17 @@ function FoodLineChart(props) {
                             borderWidth: 0
 
                         }
-                        // ... You can check the source to find the other keys.
                     }}
-                    onDateChange={(date) => { handleToDate(date) }}
+                    onDateChange={(date) => {
+                        handleToDate(date)
+                        if (selectedCategory.length > 0) {
+                            props.fetchFoodFromStoreBetweenDates({
+                                from: fromDate,
+                                to: date,
+                                store: props.foodHouse.id,
+                            })
+                        }
+                    }}
                 />
             </View>
             <View
@@ -204,8 +221,8 @@ function FoodLineChart(props) {
                                             })
                                         }
 
-                                }).filter(el=> typeof(el) !== "undefined");
-                                console.log(result,parsed)
+                                }).filter(el => typeof (el) !== "undefined");
+                                console.log(result, parsed)
                                 if (result.length == 0)
                                     return [{ data: [0] }]
                                 else return result

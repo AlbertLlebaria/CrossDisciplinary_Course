@@ -5,7 +5,8 @@ import {
     CLEAR_FORM,
     FORM_FIELD_CHANGE,
     FECTH_FOOD,
-    CLEAR_FOOD
+    CLEAR_FOOD,
+    POST_FOOD
 } from '../actions/store.actions'
 
 const parseDate = (d = new Date()) => {
@@ -31,15 +32,22 @@ const initialState = {
     providers: [],
     foodHouses: [],
     food: [],
-    formFields: { ...initSateForm }
+    formFields: { ...initSateForm },
+    formSubmit: false,
 };
 
 export const storeReducer = (state = initialState, action) => {
     switch (action.type) {
+        case POST_FOOD:
+            return {
+                ...state,
+                formSubmit: true
+            }
         case CLEAR_FOOD:
             return {
                 ...state,
-                food: []
+                food: [],
+                formSubmit: false
             }
         case FECTH_FOOD:
             return {
@@ -47,6 +55,7 @@ export const storeReducer = (state = initialState, action) => {
                 food: action.food
             }
         case FORM_FIELD_CHANGE:
+            console.log(action.value)
             return {
                 ...state,
                 formFields: {
@@ -59,7 +68,8 @@ export const storeReducer = (state = initialState, action) => {
                 ...state,
                 formFields: {
                     ...initSateForm
-                }
+                },
+                formSubmit: false
             }
         case FETCH_FOOD_BETWEEN_RANGE:
             return {

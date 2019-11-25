@@ -1,5 +1,7 @@
 import * as SLL_API from '../api/backendAPI'
-
+import {
+throw_error
+}from './global.actions'
 export const FETCH_FOOD_HOUSES = 'FETCH_FOOD_HOUSES';
 export const FETCH_PROVIDERS = 'FETCH_PROVIDERS';
 export const FETCH_FOOD_BETWEEN_RANGE = 'FETCH_FOOD_BETWEEN_RANGE';
@@ -10,6 +12,13 @@ export const CLEAR_FORM = 'CLEAR_FORM';
 export const FORM_FIELD_CHANGE = 'FORM_FIELD_CHANGE';
 export const FECTH_FOOD = 'FECTH_FOOD';
 export const CLEAR_FOOD = 'CLEAR_FOOD';
+
+
+export function postFood() {
+    return {
+        type: POST_FOOD
+    }
+}
 
 export function clearFood() {
     return {
@@ -56,6 +65,8 @@ export function fetchProviders() {
         return SLL_API.fetchProviders((err, result) => {
             if (!err) {
                 dispatch(receivedProviders(result))
+            }else{
+                dispatch(throw_error(result))
             }
         })
     }
@@ -66,6 +77,8 @@ export function fetchFoodHouses() {
         return SLL_API.fetchFoodHouses((err, result) => {
             if (!err) {
                 dispatch(receivedFoodHouses(result))
+            }else{
+                dispatch(throw_error(result))
             }
         })
     }
@@ -77,6 +90,8 @@ export function fetchFoodFromStoreBetweenDates(filters) {
         return SLL_API.fetchFoodFromStoreBetweenDates(filters,(err, result) => {
             if (!err) {
                 dispatch(receivedFood(result))
+            }else{
+                dispatch(throw_error(result))
             }
         })
     }
@@ -86,6 +101,20 @@ export function fetchFoodFromProvider(provider,date) {
         return SLL_API.fetchFoodFromProvider(provider,date,(err, result) => {
             if (!err) {
                 dispatch(receivedFood(result))
+            }else{
+                dispatch(throw_error(result))
+            }
+        })
+    }
+}
+
+export function postFoodRequest(food){
+    return function (dispatch) {
+        return SLL_API.postFood(food, (err, result) => {
+            if (!err) {
+                dispatch(postFood())
+            }else{
+                dispatch(throw_error(result))
             }
         })
     }

@@ -7,31 +7,30 @@ import {
     fetchFoodHouses,
     fetchProviders,
     clearForm,
-    handleFormChange
+    handleFormChange,
+    postFoodRequest
 } from '../../actions/store.actions'
-import {
-    postFood
-} from '../../api/backendAPI'
+import { cleanError } from '../../actions/global.actions'
+
 import { styles, theme } from './style.js'
 
 
 function ScannerForm(props) {
 
-    const [isVisible, handleSnackBar] = useState(false)
-
-    const handleSubmit = () => {
-        postFood(props.form, (err, response) => {
-            if (!err)
-                handleSnackBar(true)
-            else 
-                handleSnackBar(true)
-        })
-    };
-
     useEffect(() => {
         props.fetchFoodHouses()
         props.fetchProviders()
     }, [])
+
+    const onSnackBarClick = () => {
+        if (props.error) {
+            props.cleanError()
+        } else {
+            props.clearForm()
+            props.cleanError()
+        }
+    }
+    const isVisible = props.formSubmit === true || props.error !== null;
 
     if (props.foodHouses.lenght === 0 || props.providers.lenght === 0) {
         return (<View style={styles.container}>
@@ -51,7 +50,7 @@ function ScannerForm(props) {
                         value={props.form.barcode !== null ? props.form.barcode : props.form.name}
                         onChangeText={text => {
                             let key = props.form.barcode !== null ? 'barcode' : 'name';
-                            props.handleFormChange(key,text)
+                            props.handleFormChange(key, text)
                         }}
                     />
                     <Button icon="camera" mode="contained" color="#C4D6B0"
@@ -74,7 +73,7 @@ function ScannerForm(props) {
                             dateIcon: styles.dateIcon,
                             dateInput: styles.dateInput
                         }}
-                        onDateChange={(date) => { props.handleFormChange('expiracyDate', date ) }}
+                        onDateChange={(date) => { props.handleFormChange('expiracyDate', date) }}
                     />
                 </View>
                 <View style={styles.form_content__input}>
@@ -92,7 +91,7 @@ function ScannerForm(props) {
                             dateIcon: styles.dateIcon,
                             dateInput: styles.dateInput
                         }}
-                        onDateChange={(date) => { props.handleFormChange( 'recievedDate', date ) }}
+                        onDateChange={(date) => { props.handleFormChange('recievedDate', date) }}
                     />
                 </View>
                 <TextInput
@@ -104,14 +103,14 @@ function ScannerForm(props) {
                     style={styles.form_content__input}
                     value={props.form.amount}
                     keyboardType={'numeric'}
-                    onChangeText={text => props.handleFormChange( 'amount', text )}
+                    onChangeText={text => props.handleFormChange('amount', text)}
                 />
                 <View style={styles.form_content__input}>
                     <Text style={styles.form__content__label}>Provider</Text>
                     <Picker
                         selectedValue={'this.state.language}'}
                         style={styles.form_content_picker}
-                        onValueChange={(itemValue, itemIndex) => props.handleFormChange('provider', itemValue )}>
+                        onValueChange={(itemValue, itemIndex) => props.handleFormChange('provider', itemValue)}>
                         {props.providers.map(provider => {
                             return (
                                 <Picker.Item
@@ -127,7 +126,7 @@ function ScannerForm(props) {
                     <Picker
                         selectedValue={props.form.foodHouse}
                         style={styles.form_content_picker}
-                        onValueChange={(itemValue, itemIndex) => props.handleFormChange( 'foodHouse', itemValue )}>
+                        onValueChange={(itemValue, itemIndex) => props.handleFormChange('foodHouse', itemValue)}>
                         {props.foodHouses.map(foodHouse => {
                             return (
                                 <Picker.Item
@@ -144,7 +143,7 @@ function ScannerForm(props) {
                     color="#FFFFFF"
                     style={styles.submit_button}
                     onPress={() => {
-                        handleSubmit()
+                        props.postFoodRequest(props.form);
                     }}>
                     Tilmeld
                 </Button>
@@ -152,16 +151,13 @@ function ScannerForm(props) {
             <Snackbar
                 style={{ color: '#C4D6B0' }}
                 visible={isVisible}
-                onDismiss={() => handleSnackBar(false)}
+                onDismiss={() => onSnackBarClick()}
                 action={{
-                    label: 'Continue',
-                    onPress: () => {
-                        handleSnackBar(false)
-                        props.clearForm()
-                    },
+                    label: "Blive ved",
+                    onPress: () => { onSnackBarClick() }
                 }}>
-                Mad er blevet registreret med succes
-                </Snackbar>
+                {props.error === null ? 'Mad er blevet registreret med succes' : 'Kunne ikke indsende data'}
+            </Snackbar>
             <Button
                 style={{
                     position: 'absolute',
@@ -172,9 +168,9 @@ function ScannerForm(props) {
                 color="#FFFFFF"
                 raised
                 onPress={() => {
-                    props.navigation.navigate('Home')
                     props.clearForm()
-
+                    props.cleanError()
+                    props.navigation.navigate('Home')
                 }}>
                 Tilbage
                 </Button>
@@ -187,6 +183,8 @@ const mapStateToProps = function (state) {
         providers: state.API_store.providers,
         foodHouses: state.API_store.foodHouses,
         form: state.API_store.formFields,
+        formSubmit: state.API_store.formSubmit,
+        error: state.data.error
 
     }
 }
@@ -194,7 +192,9 @@ const mapDispatchToProps = {
     fetchFoodHouses,
     fetchProviders,
     handleFormChange,
-    clearForm
+    clearForm,
+    cleanError,
+    postFoodRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScannerForm);
