@@ -3,11 +3,8 @@
 
 ### The project
 
+
 This app consists of a prototype build during the Crossdisciplinary work Course at ITU.
-
-The purpose of this project is to show how an interdisciplinary team can  work together to address complex and ambiguous research questions (Cermak & Walker, 2012; Chettiparamb, 2017; König, 2013).
-
-Saying that, we developed
 
 Participants and roles:
 * Kasper - Msc. DIGITAL DESIGN AND INTERACTIVE TECHNOLOGIES student. 
