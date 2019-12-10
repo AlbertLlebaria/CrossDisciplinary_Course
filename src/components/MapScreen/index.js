@@ -7,11 +7,11 @@ import {
     Dimensions,
     TouchableOpacity,
 } from "react-native";
-import { Button } from 'react-native-paper'
+import { Button, ActivityIndicator, Colors} from 'react-native-paper'
 import MapView from "react-native-maps";
 import LineChart from "../LineChart";
 import { fetchFoodHouses } from '../../actions/store.actions'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 const { width, height } = Dimensions.get("window");
 
@@ -99,6 +99,21 @@ class MapScreen extends Component {
 
         return (
             <View style={styles.container}>
+                {this.props.isLoading && (
+                    <View style={{
+                        flex: 1,
+                        position: 'absolute',
+                        width: '100%',
+                        top: 0,
+                        height: '100%',
+                        zIndex: 99,
+                        backgroundColor: 'rgba(1, 15, 10, 0.51)',
+                        justifyContent: 'center',
+                        alignContent: 'center'
+                    }}>
+                        <ActivityIndicator animating={true} size={'large'} color={Colors.green400} />
+                    </View>
+                )}
                 <MapView
                     ref={map => this.map = map}
                     initialRegion={this.state.region}
@@ -254,7 +269,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = function (state) {
     return {
-        foodHouses: state.API_store.foodHouses
+        foodHouses: state.API_store.foodHouses,
+        isLoading: state.data.isLoading
     }
 }
 const mapDispatchToProps = {

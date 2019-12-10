@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { List, Text, Button } from 'react-native-paper';
+import { List, Text, Button, ActivityIndicator, Colors } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { View, SafeAreaView, ScrollView } from 'react-native'
 import {
@@ -25,13 +25,27 @@ function FoodList(props) {
 
     const [expandedControl, handleExpandedProviders] = useState(props.providers.map(el => false))
 
-
     return (
         <SafeAreaView style={{
-            marginTop: 30,
+            marginTop: 0,
             flex: 1,
-            textAlign: 'center'
+            textAlign: 'center',
         }}>
+            {props.isLoading && (
+                <View style={{
+                    flex: 1,
+                    position: 'absolute',
+                    width: '100%',
+                    top: 0,
+                    height: '100%',
+                    zIndex: 99,
+                    backgroundColor: 'rgba(1, 15, 10, 0.51)',
+                    justifyContent: 'center',
+                    alignContent: 'center'
+                }}>
+                    <ActivityIndicator animating={true} size={'large'} color={Colors.green400} />
+                </View>
+            )}
             <ScrollView>
                 <View style={{
                     display: 'flex',
@@ -48,7 +62,7 @@ function FoodList(props) {
                         textAlign: 'center',
                     }}>
                         Allerede registeret mad
-            </Text>
+                </Text>
                     <View style={{
                         width: '50%',
                         borderBottomColor: 'black',
@@ -97,7 +111,7 @@ function FoodList(props) {
                         }}
                     />
                 </View>
-                <List.Section title="Providers">
+                <List.Section title="Providers" style={{ marginBottom: 30 }}>
                     {props.providers.map((provider, index) => {
                         return (<List.Accordion
                             key={`${provider.name}-${index}`}
@@ -123,26 +137,26 @@ function FoodList(props) {
                 </List.Section>
             </ScrollView>
             <Button
-                    style={{
-                        position: 'absolute',
-                        width: '100%',
-                        bottom: 0,
-                        backgroundColor: '#C4D6B0'
-                    }}
-                    color="#FFFFFF"
-                    raised
-                    onPress={() => {
-                        props.navigation.navigate('Home')
-                    }}>
-                    Tilbage
-                </Button>
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    backgroundColor: '#C4D6B0'
+                }}
+                color="#FFFFFF"
+                raised
+                onPress={() => {
+                    props.navigation.navigate('Home')
+                }}>Tilbage</Button>
         </SafeAreaView>
     )
+
 }
 const mapStateToProps = function (state) {
     return {
         food: state.API_store.food,
-        providers: state.API_store.providers
+        providers: state.API_store.providers,
+        isLoading: state.data.isLoading
     }
 }
 const mapDispatchToProps = {
