@@ -32,12 +32,24 @@ function ScannerForm(props) {
     }
     const isVisible = props.formSubmit === true || props.error !== null;
 
-    if (props.foodHouses.lenght === 0 || props.providers.lenght === 0) {
-        return (<View style={styles.container}>
-            <ActivityIndicator animating={true} color={Colors.green600} size="large" />
-        </View>)
-    } else {
-        return (<View style={styles.container}>
+
+    return (
+        <View style={styles.container}>
+            {props.isLoading && (
+                <View style={{
+                    flex: 1,
+                    position: 'absolute',
+                    width: '100%',
+                    top: 0,
+                    height: '100%',
+                    zIndex: 99,
+                    backgroundColor: 'rgba(1, 15, 10, 0.51)',
+                    justifyContent: 'center',
+                    alignContent: 'center'
+                }}>
+                    <ActivityIndicator animating={true} size={'large'} color={Colors.green400} />
+                </View>
+            )}
             <View style={styles.form_content}>
                 <Text style={styles.form__content__info_text}>Information om mad</Text>
                 <View style={styles.form_content__input}>
@@ -175,7 +187,7 @@ function ScannerForm(props) {
                 Tilbage
                 </Button>
         </View >)
-    }
+
 }
 
 const mapStateToProps = function (state) {
@@ -184,8 +196,8 @@ const mapStateToProps = function (state) {
         foodHouses: state.API_store.foodHouses,
         form: state.API_store.formFields,
         formSubmit: state.API_store.formSubmit,
-        error: state.data.error
-
+        error: state.data.error,
+        isLoading: state.data.isLoading
     }
 }
 const mapDispatchToProps = {

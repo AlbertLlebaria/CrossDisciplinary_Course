@@ -3,7 +3,7 @@
 # Server node modules
 server/node_modules/
 
-.expo/
+.expo/**
 # Logs
 logs
 *.log

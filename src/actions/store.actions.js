@@ -13,6 +13,7 @@ export const FORM_FIELD_CHANGE = 'FORM_FIELD_CHANGE';
 export const FECTH_FOOD = 'FECTH_FOOD';
 export const CLEAR_FOOD = 'CLEAR_FOOD';
 
+import {stopLoading,startLoading} from './global.actions'
 
 export function postFood() {
     return {
@@ -61,8 +62,11 @@ export function receivedProviders(providers) {
 }
 
 export function fetchProviders() {
+
     return function (dispatch) {
+        dispatch(startLoading())
         return SLL_API.fetchProviders((err, result) => {
+            dispatch(stopLoading())
             if (!err) {
                 dispatch(receivedProviders(result))
             }else{
@@ -74,12 +78,14 @@ export function fetchProviders() {
 
 export function fetchFoodHouses() {
     return function (dispatch) {
+        dispatch(startLoading())
         return SLL_API.fetchFoodHouses((err, result) => {
             if (!err) {
                 dispatch(receivedFoodHouses(result))
             }else{
                 dispatch(throw_error(result))
             }
+            dispatch(stopLoading())
         })
     }
 }
@@ -87,23 +93,27 @@ export function fetchFoodHouses() {
 
 export function fetchFoodFromStoreBetweenDates(filters) {
     return function (dispatch) {
+        dispatch(startLoading())
         return SLL_API.fetchFoodFromStoreBetweenDates(filters,(err, result) => {
             if (!err) {
                 dispatch(receivedFood(result))
             }else{
                 dispatch(throw_error(result))
             }
+            dispatch(stopLoading())
         })
     }
 }
 export function fetchFoodFromProvider(provider,date) {
     return function (dispatch) {
+        dispatch(startLoading())
         return SLL_API.fetchFoodFromProvider(provider,date,(err, result) => {
             if (!err) {
                 dispatch(receivedFood(result))
             }else{
                 dispatch(throw_error(result))
             }
+            dispatch(stopLoading())
         })
     }
 }
@@ -111,11 +121,13 @@ export function fetchFoodFromProvider(provider,date) {
 export function postFoodRequest(food){
     return function (dispatch) {
         return SLL_API.postFood(food, (err, result) => {
+            dispatch(startLoading())
             if (!err) {
                 dispatch(postFood())
             }else{
                 dispatch(throw_error(result))
             }
+            dispatch(stopLoading())
         })
     }
 }

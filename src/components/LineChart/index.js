@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { LineChart } from "react-native-chart-kit";
 import DatePicker from 'react-native-datepicker'
-import { Button, ActivityIndicator, Colors, IconButton } from 'react-native-paper';
+import { Button, Colors, Text } from 'react-native-paper';
 import { reduce } from 'lodash'
 
 import { connect } from 'react-redux'
@@ -197,49 +197,49 @@ function FoodLineChart(props) {
                     </Button>
                 ))}
             </View>
-            {isLoading ? <View style={{ height: 200, alignItems: 'center', justifyContent: 'center' }}>
-                <ActivityIndicator animating={true} color={Colors.green600} size="large" />
-            </View> : selectedCategory.length > 0 ?
-                    <LineChart
-                        data={{
-                            labels: (() => {
-                                return labels.map(data => {
-                                    const date = new Date(data)
-                                    var mm = date.getMonth() + 1; // getMonth() is zero-based
-                                    var dd = date.getDate();
-                                    return `${dd}/${mm}`
-                                })
-                            }
-                            )(),
-                            datasets: (() => {
-                                const result = Object.keys(parsed).map(category => {
+            {selectedCategory.length > 0 ?
+                <LineChart
+                    data={{
+                        labels: (() => {
+                            return labels.map(data => {
+                                const date = new Date(data)
+                                var mm = date.getMonth() + 1; // getMonth() is zero-based
+                                var dd = date.getDate();
+                                return `${dd}/${mm}`
+                            })
+                        }
+                        )(),
+                        datasets: (() => {
+                            const result = Object.keys(parsed).map(category => {
 
-                                    if (selectedCategory.includes(category))
-                                        return {
-                                            data: Object.keys(parsed[category]).map(key => {
-                                                return parsed[category][key]
-                                            })
-                                        }
+                                if (selectedCategory.includes(category))
+                                    return {
+                                        data: Object.keys(parsed[category]).map(key => {
+                                            return parsed[category][key]
+                                        })
+                                    }
 
-                                }).filter(el => typeof (el) !== "undefined");
-                                console.log(result, parsed)
-                                if (result.length == 0)
-                                    return [{ data: [0] }]
-                                else return result
-                            })()
-                        }}
-                        width={300} // from react-native
-                        height={180}
-                        chartConfig={chartConfig}
-                        bezier
-                        style={{
-                            marginVertical: 20,
-                            borderRadius: 16
-                        }}
-                    /> : <View style={{ height: 200 }}></View>}
+                            }).filter(el => typeof (el) !== "undefined");
+                            console.log(result, parsed)
+                            if (result.length == 0)
+                                return [{ data: [0] }]
+                            else return result
+                        })()
+                    }}
+                    width={300} // from react-native
+                    height={180}
+                    chartConfig={chartConfig}
+                    bezier
+                    style={{
+                        marginVertical: 20,
+                        borderRadius: 16
+                    }}
+                /> :
+                <View style={{ height: 150, justifyContent: 'center', alignContent: 'center' }}>
+                    <Text style={{ color: '#C4D6B0' }}>Select a food category</Text>
+                </View>}
         </View>
     )
-
 }
 
 

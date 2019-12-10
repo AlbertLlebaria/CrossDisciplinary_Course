@@ -2,15 +2,15 @@ import { gql } from "apollo-boost"
 import ApolloClient from 'apollo-boost/lib/index'
 import Constants from 'expo-constants';
 
-// const { manifest } = Constants;
-// const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
-//   ? manifest.debuggerHost.split(`:`).shift().concat(`:5000`)
-//   : `http://enigmatic-refuge-22568.herokuapp.com/`;
+const { manifest } = Constants;
+const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
+  ? manifest.debuggerHost.split(`:`).shift().concat(`:5000`)
+  : `http://enigmatic-refuge-22568.herokuapp.com/`;
 
-// console.log(api)
+console.log(api)
 
 const client = new ApolloClient({
-  uri: `http://enigmatic-refuge-22568.herokuapp.com/`,
+  uri: `http://${api}`,
 });
 
 
@@ -82,7 +82,6 @@ export const postFood = (RegisteredFood, callback) => {
     `barcode: "${RegisteredFood.barcode}"` :
     `name: "${RegisteredFood.name}"`
 
-  console.log(RegisteredFood)
   client
     .mutate({
       mutation: gql`mutation {
