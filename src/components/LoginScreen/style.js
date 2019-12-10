@@ -16,11 +16,14 @@ export default StyleSheet.create({
     },
     image_container: {
         width: '80%',
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    logo_image:{
-        zIndex:999,
+    logo_image: {
+        width: 150,
+        height: 150,
+        resizeMode: 'contain',
+        zIndex: 999,
     },
     line_style_left: {
         position: "absolute",
@@ -40,20 +43,20 @@ export default StyleSheet.create({
         borderColor: 'black',
         margin: 10,
     },
-    auxiliary_bottom__left:{
+    auxiliary_bottom__left: {
         position: "absolute",
-        bottom:0,
-        left:0,
-        fontSize:12,
-        margin:5,
-        color:'#808080'
+        bottom: 0,
+        left: 0,
+        fontSize: 12,
+        margin: 5,
+        color: '#808080'
     },
-    auxiliary_bottom__right:{
+    auxiliary_bottom__right: {
         position: "absolute",
-        bottom:0,
-        right:0,
-        fontSize:12,
-        margin:5,
-        color:'#808080'
+        bottom: 0,
+        right: 0,
+        fontSize: 12,
+        margin: 5,
+        color: '#808080'
     }
 });

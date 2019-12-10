@@ -16,9 +16,7 @@ function LoginScreen(props) {
     return (
         <View style={styles.container}>
             <View style={styles.image_container} >
-                <View style={styles.line_style_left} />
                 <Image style={styles.logo_image} source={require('../imgs/Logo.png')} />
-                <View style={styles.line_style_right} />
             </View>
             <View style={styles.form_container}>
                 <TextInput
@@ -29,6 +27,7 @@ function LoginScreen(props) {
                 />
                 <TextInput
                     label='Password'
+                    secureTextEntry={true} 
                     style={{ marginTop: 20, backgroundColor: 'none' }}
                     value={formFields.password}
                     onChangeText={text => changeValueFromForm({ ...formFields, password: text })}

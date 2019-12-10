@@ -27,6 +27,7 @@ In order to test the app locarly, you have to:
 After that run the following commands in the shell:
 
 > npm install
+
 > npm run web
 
 With the openned browser window, scann with the expo app the QR code and test the application.

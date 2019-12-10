@@ -82,7 +82,6 @@ export const postFood = (RegisteredFood, callback) => {
     `barcode: "${RegisteredFood.barcode}"` :
     `name: "${RegisteredFood.name}"`
 
-  console.log(RegisteredFood)
   client
     .mutate({
       mutation: gql`mutation {
